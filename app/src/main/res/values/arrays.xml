@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="course_level" >
+        <item>전체</item>
+        <item>초급자</item>
+        <item>중급자</item>
+        <item>고급자</item>
+    </string-array>
+</resources>

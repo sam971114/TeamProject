@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/main_win"
+        android:title="메인 화면"/>
+    <item
+        android:id="@+id/nav_recom"
+        android:title="추천 코스" />
+    <item
+        android:id="@+id/nav_nearby"
+        android:title="가까운 코스" />
+    <item
+        android:id="@+id/nav_record"
+        android:title="기록 확인" />
+    <item
+        android:id="@+id/nav_weather"
+        android:title="날씨 확인" />
+    <item
+        android:id="@+id/nav_challenge"
+        android:title="챌린지 리스트" />
+    <item
+        android:id="@+id/nav_setting"
+        android:title="환경 설정" />
+</menu>

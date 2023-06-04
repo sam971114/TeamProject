@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="목표 거리"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/paceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="평균 페이스"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/levelTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="난이도"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/expTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="경험치"
+        android:textSize="16sp" />
+
+</LinearLayout>
