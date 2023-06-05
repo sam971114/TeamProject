@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -96,26 +97,57 @@ class ChallegeActivity : AppCompatActivity() {
             adapter = ChallengeDataAdapter(datas)
             adapter.itemClickListener = object:ChallengeDataAdapter.OnItemClickListener{
                 override fun onItemClick(data: ChallengeData, adapterPosition: Int) {
-                    data.cur = when (data.cur) {
-                        0.0 -> 1.0
-                        else -> 0.0
-                    }
-                    // 챌린지 내에서 쓸 데이터 조작
-                    val output = PrintStream(openFileOutput("challenge_list.txt", MODE_PRIVATE))
-                    for (i in datas.indices) {
-                        if (i != adapterPosition) { // 다른 챌린지가 켜져있다면, 꺼버리기
-                            datas[i] = ChallengeData(datas[i].goal, 0.0)
-                            output.println("${datas[i].goal} 0")
-                        }
-                        else
-                            output.println("${datas[i].goal} ${data.cur}") // 선택된 챌린지 변경 적용
-                    }
-                    output.close()
-                    adapter.notifyDataSetChanged()
+                    if (data.cur == 1.0)
+                        cancelAlertDialog(adapter, data, adapterPosition)
+                    else
+                        checkAlertDialog(adapter, data, adapterPosition)
                 }
             }
             challengeList.adapter = adapter
         }
+    }
+
+    fun checkAlertDialog(adapter: ChallengeDataAdapter, data: ChallengeData, adapterPosition: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("한 달에 ${data.goal}km 챌린지를 새로 시작하겠습니까?")
+            .setPositiveButton("시작") {
+                    _, _ -> changeData(adapter, data, adapterPosition)
+            }.setNegativeButton("창 닫기") {
+                    dlg, _ -> dlg.dismiss()
+            }
+        val dlg = builder.create()
+        dlg.show()
+    }
+
+    fun cancelAlertDialog(adapter: ChallengeDataAdapter, data: ChallengeData, adapterPosition: Int) {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("한 달에 ${data.goal}km 챌린지를 종료하겠습니까?")
+            .setPositiveButton("종료") {
+                    _, _ -> changeData(adapter, data, adapterPosition)
+            }.setNegativeButton("창 닫기") {
+                    dlg, _ -> dlg.dismiss()
+            }
+        val dlg = builder.create()
+        dlg.show()
+    }
+
+    private fun changeData(adapter: ChallengeDataAdapter, data: ChallengeData, adapterPosition: Int) {
+        data.cur = when (data.cur) {
+            0.0 -> 1.0
+            else -> 0.0
+        }
+        // 챌린지 내에서 쓸 데이터 조작
+        val output = PrintStream(openFileOutput("challenge_list.txt", MODE_PRIVATE))
+        for (i in datas.indices) {
+            if (i != adapterPosition) { // 다른 챌린지가 켜져있다면, 꺼버리기
+                datas[i] = ChallengeData(datas[i].goal, 0.0)
+                output.println("${datas[i].goal} 0")
+            }
+            else
+                output.println("${datas[i].goal} ${data.cur}") // 선택된 챌린지 변경 적용
+        }
+        output.close()
+        adapter.notifyDataSetChanged()
     }
 
     override fun onPause() {
