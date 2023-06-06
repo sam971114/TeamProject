@@ -60,6 +60,11 @@ class MyRunPause : AppCompatActivity() {
     var ticktok:Int = 0
     //변수세팅
 
+    var goalLen = 0
+    var goalPace = 0
+    var goalExp = 0
+    var goalLev = 0
+
 
     //권한 설정시작
     val permissions = arrayOf(
@@ -157,6 +162,13 @@ class MyRunPause : AppCompatActivity() {
         before_pauseTime = intent.getLongExtra("pause_elapsedtime", 0)
         distance = intent.getDoubleExtra("pause_distance", 0.0)
         pace = intent.getDoubleExtra("pause_pace", 0.0)
+
+
+//        val intent_goal = getIntent()
+//        goalLen = intent_goal.getIntExtra("goalLenn", 0)
+//        goalPace = intent_goal.getIntExtra("goalPacee", 0)
+//        goalExp = intent_goal.getIntExtra("goalExpp", 0)
+//        goalLev = intent_goal.getIntExtra("goalLevv", 0)
         //intent값 없는경우(시작할때)
 
         initmap()
@@ -169,13 +181,13 @@ class MyRunPause : AppCompatActivity() {
         binding.apply {
             imageView5.setOnClickListener {
                 destroy =1
-                val intent_pause = Intent(this@MyRunPause, MyRunRunning::class.java)
-                startActivity(intent_pause)
+//                val intent_pause = Intent(this@MyRunPause, MyRunRunning::class.java)
+//                startActivity(intent_pause)
             }
             textView15.setOnClickListener {
                 destroy =1
-                val intent_pause_btn = Intent(this@MyRunPause, MyRunRunning::class.java)
-                startActivity(intent_pause_btn)
+//                val intent_pause_btn = Intent(this@MyRunPause, MyRunRunning::class.java)
+//                startActivity(intent_pause_btn)
             }
 
             imageView6.setOnClickListener {
@@ -346,6 +358,13 @@ class MyRunPause : AppCompatActivity() {
                     intent_sec.putExtra("elapsedtime",elsp_time)
                     intent_sec.putExtra("distance", distance)
                     intent_sec.putExtra("pace", pace)
+
+
+
+//                    intent_sec.putExtra("goalLennn", goalLen)
+//                    intent_sec.putExtra("goalPaceee", goalPace)
+//                    intent_sec.putExtra("goalExppp", goalExp)
+//                    intent_sec.putExtra("goalLevvv", goalLev)
                     startActivity(intent_sec)
                 }
             }

@@ -10,6 +10,9 @@ import com.example.myrunmain.RunData
 import com.example.myrunmain.RunDataAdapter
 import com.example.myrunmain.R
 import com.example.myrunmain.databinding.FirFragmentBinding
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
 import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,17 +33,29 @@ class FirFragment : Fragment() {
         return binding.root
     }
 
-    private fun initData(){
-        try{
-            val scan = Scanner(resources.openRawResource(R.raw.runlist))
-            while(scan.hasNextLine()) {
-                val runOne = scan.nextLine()
-                val runarr = runOne.split(",")
-                if(runarr[2].toInt() == 1)
-                    data.add(RunData(runarr[0].toDouble(),runarr[1].toDouble(),runarr[2].toInt(),runarr[3]))
+    private fun initData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/runlist.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+                if (runarr[2].toInt() == 1)
+                    data.add(
+                        RunData(
+                            runarr[0].toDouble(),
+                            runarr[1].toDouble(),
+                            runarr[2].toInt(),
+                            runarr[3]
+                        )
+                    )
             }
-        }catch(e: IOException){
-            Log.i("error", "initData")
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
         }
     }
 }

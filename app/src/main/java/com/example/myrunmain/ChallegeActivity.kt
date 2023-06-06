@@ -22,6 +22,7 @@ class ChallegeActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     var datas:ArrayList<ChallengeData> = ArrayList()
+    var stop = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChallegeBinding.inflate(layoutInflater)
@@ -112,6 +113,9 @@ class ChallegeActivity : AppCompatActivity() {
         builder.setMessage("한 달에 ${data.goal}km 챌린지를 새로 시작하겠습니까?")
             .setPositiveButton("시작") {
                     _, _ -> changeData(adapter, data, adapterPosition)
+                val intent_second = Intent(this@ChallegeActivity, SecondActivity::class.java)
+                intent_second.putExtra("goal", data.goal)
+                startActivity(intent_second)
             }.setNegativeButton("창 닫기") {
                     dlg, _ -> dlg.dismiss()
             }
@@ -124,6 +128,10 @@ class ChallegeActivity : AppCompatActivity() {
         builder.setMessage("한 달에 ${data.goal}km 챌린지를 종료하겠습니까?")
             .setPositiveButton("종료") {
                     _, _ -> changeData(adapter, data, adapterPosition)
+                stop =1
+                val intent_stop = Intent(this@ChallegeActivity, SecondActivity::class.java)
+                intent_stop.putExtra("goal", 0.0)
+                startActivity(intent_stop)
             }.setNegativeButton("창 닫기") {
                     dlg, _ -> dlg.dismiss()
             }
@@ -142,7 +150,12 @@ class ChallegeActivity : AppCompatActivity() {
             if (i != adapterPosition) { // 다른 챌린지가 켜져있다면, 꺼버리기
                 datas[i] = ChallengeData(datas[i].goal, 0.0)
                 output.println("${datas[i].goal} 0")
+            }else if(stop ==1) {
+                stop = 0
+                output.println("${data.cur}")
             }
+
+
             else
                 output.println("${datas[i].goal} ${data.cur}") // 선택된 챌린지 변경 적용
         }

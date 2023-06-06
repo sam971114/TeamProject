@@ -21,8 +21,8 @@ class CourseAdapter(private val runningList: List<CourseData>,
     }
 
     override fun onBindViewHolder(holder: CourseRecomViewHolder, position: Int) {
-        holder.binding.distanceTextView.text = "목표 거리 : " + runningList[position].len
-        holder.binding.paceTextView.text = "평균 페이스 : " + runningList[position].pace
+        holder.binding.distanceTextView.text = "목표 거리 : " + runningList[position].len + "km"
+        holder.binding.paceTextView.text = "평균 페이스 : " + runningList[position].pace + "km/h"
         holder.binding.levelTextView.text = "난이도 : " + runningList[position].level
         holder.binding.expTextView.text = "경험치 : " + runningList[position].exp
         holder.itemView.setOnClickListener {

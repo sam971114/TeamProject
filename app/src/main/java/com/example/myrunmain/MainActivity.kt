@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.renderscript.RenderScript
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -30,6 +31,7 @@ import com.google.android.gms.tasks.CancellationToken
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.navigation.NavigationView
+import java.io.*
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -50,6 +52,9 @@ class MainActivity : AppCompatActivity() {
     var comp = arrayListOf(0,0,0,0) //초급자, 중급자, 고급자, 챌린지 완료 횟수
     //Running 끝난 후 여기에 반영해주시면 됩니다!
     //경험치 증가 값은 예전 회의 때 정해서 노션에 있습니다.
+    var expo = 0
+
+
 
 
     val permissions = arrayOf(
@@ -143,12 +148,74 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
 
+        val intent_goal = getIntent()
+        var goalLen = intent_goal.getIntExtra("goalLen", 0)
+        var goalPace = intent_goal.getIntExtra("goalPace", 0)
+        var goalExp = intent_goal.getIntExtra("goalExp", 0)
+        var goalLev = intent_goal.getStringExtra("goalLev")
+        var int_goalLev = 0
+        if(goalLev == "초급자") {
+            int_goalLev = 1
+        } else if(goalLev == "중급자") {
+            int_goalLev = 2
+        } else if(goalLev == "고급자") {
+            int_goalLev = 3
+        }
+
+        if(goalLen ==0) {
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "goal.txt", "0,0,없음,0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        val dir_trophy = File("/data/data/com.example.myrunmain/files/trophy.txt")
+        if (!dir_trophy.exists()) {
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "0,0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        val dir_level = File("/data/data/com.example.myrunmain/files/level.txt")
+        if (!dir_level.exists()) {
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "0,0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        val dir_medal = File("/data/data/com.example.myrunmain/files/medal.txt")
+        if (!dir_medal.exists()) {
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "medal.txt", "0,0,0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
         initmap()
+        initMedalData()
+        initLevelData()
+        initTrophyData()
         initLayout()
-        //initChanllengeLayout()
+        if(goalLen != 0) {
+            Toast.makeText(this, "현재 일일 코스 \n 목표거리 : $goalLen km , 목표 페이스 : $goalPace km/h", Toast.LENGTH_SHORT).show()
+        }
 
         binding.button.setOnClickListener {
             val intent = Intent(this, MyRunPause::class.java )
+//            intent.putExtra("goalLenn", goalLen)
+//            intent.putExtra("goalPacee", goalPace)
+//            intent.putExtra("goalExpp", goalExp)
+//            intent.putExtra("goalLevv", int_goalLev)
             startActivity(intent)
         }
         navigationView.setNavigationItemSelectedListener { menuItem -> when (menuItem.itemId) {
@@ -322,35 +389,83 @@ class MainActivity : AppCompatActivity() {
         initLayout()
     }*/
 
-    /*private fun initChanllengeLayout() {
-        binding.apply {
-            var scan: Scanner
-            var km:String
-            try {
-                scan = Scanner(openFileInput("challenge.txt"))
-                km = scan.nextLine()
-            } catch (e : Exception) {
-                km = "0"
-            }
-            btnChall.text = km
-            var sets = ""
-            try {
-                scan = Scanner(openFileInput("setting.txt"))
-                while (scan.hasNextLine()) {
-                    sets += scan.nextLine() + "\n"
-                }
-            } catch (e : Exception) {
-                sets = "0\n0\n0\n0\n"
-            }
-            btnSet.text = sets
-            btnChall.setOnClickListener {
-                startActivity(Intent(this@MainActivity, ChallegeActivity::class.java))
-            }
-            btnSet.setOnClickListener {
-                startActivity(Intent(this@MainActivity, SettingActivity::class.java))
-            }
+    fun writeTextFile(directory: String, filename: String, content: String) {
+        /* directory가 존재하는지 검사하고 없으면 생성 */
+        val dir = File(directory)
+        if (!dir.exists()) {
+            dir.mkdirs()
         }
-    }*/
-    //재원님 mainactivity
+
+        val writer = FileWriter(directory + "/" + filename)  // FileWriter 생성
+        println("write dir=${directory + "/" + filename}")
+        val buffer = BufferedWriter(writer)  // buffer에 담아서 속도 향상
+
+        buffer.write(content)  // buffer로 내용 쓰고
+        buffer.close()  // buffer 닫기
+    }
+
+    private fun initMedalData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/medal.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+                comp[0] = runarr[0].toInt()
+                comp[1] = runarr[1].toInt()
+                comp[2] = runarr[2].toInt()
+
+            }
+            initLayout()
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
+
+    private fun initLevelData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/level.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+                expo = runarr[1].toInt()
+            }
+
+            initLayout()
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+        level = expo / 100
+        curprogress = expo % 100
+    }
+
+    private fun initTrophyData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/trophy.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+               comp[3] = runarr[0].toInt()
+
+            }
+            initLayout()
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
 
 }

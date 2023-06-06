@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
@@ -14,7 +15,7 @@ import com.example.myrunmain.R
 import com.example.myrunmain.databinding.ActivitySecondBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
-import java.io.File
+import java.io.*
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -28,6 +29,9 @@ class SecondActivity : AppCompatActivity() {
     var imgarr = arrayListOf<Int>(R.drawable.baseline_directions_run_24, R.drawable.sapling, R.drawable.vine, R.drawable.tree)
     var txtarr = arrayListOf<String>("전체", "초급자", "중급자", "고급자")
     val cal = Calendar.getInstance()
+    var datas:ArrayList<RunData> = ArrayList()
+    var goalLen = 0.0
+    var goalPace = 0.0
 
     /*지난 주 정보, 이번 주 정보, 챌린지 저장 위치*/
     var lastweek = 0.0
@@ -37,6 +41,13 @@ class SecondActivity : AppCompatActivity() {
 
     var updateMonth = false
     var updateWeek = false
+    var data:ArrayList<RunData> = ArrayList()
+    var newChall = 0.0
+    var total_distance = 0.00
+    var trophy = 0
+    var level = 0
+    var expo = 0
+    var distance = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +55,67 @@ class SecondActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
+
+        val intent_get = getIntent()
+        distance = intent_get.getDoubleExtra("second_distance", 0.0)
+
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
+
+        val dir = File("/data/data/com.example.myrunmain/files/trophy.txt")
+        if (!dir.exists()) {
+            dir.mkdirs()
+            total_distance = 0.0
+            trophy = 0
+        }
+        else {
+            initTrophyData()
+        }
+
+        val dir_level = File("/data/data/com.example.myrunmain/files/level.txt")
+        if (!dir_level.exists()) {
+            dir_level.mkdirs()
+            level = 0
+            expo = 0
+        }
+        else {
+            initLevelData()
+        }
+
+        total_distance += distance
+        initData()
+
+
+        if(total_distance / 1000 >= newChall) {
+            println("$total_distance")
+            trophy++
+            binding.progressBar.setProgress(0)
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+            initClg()
+            initlayout()
+        }
+        else{
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,$total_distance")
+                println("$trophy,$total_distance")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+
+            initClg()
+            initlayout()
+            //binding.progressBar.max = curClg!!.goal.toInt()
+            //binding.progressBar.setProgress(curClg!!.cur.toInt())
+            //binding.progressBar.setProgress(total_distance.toInt())
+        }
+
+        //다시
+        //+expo -> level올라가는거 구현
 
         navigationView.setNavigationItemSelectedListener { menuItem -> when (menuItem.itemId) {
             R.id.main_win -> {
@@ -86,11 +156,14 @@ class SecondActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu)
         }
+        //initGoal()
 
-        initClg()
         initCompare()
         initlayout()
+
+
     }
+
 
     private fun initlayout(){
         binding.viewpager.adapter = ViewPageAdapter(supportFragmentManager, lifecycle)
@@ -105,9 +178,10 @@ class SecondActivity : AppCompatActivity() {
         }
     }
     private fun initClg(){
-        val intent = getIntent()
-        val distance = intent.getIntExtra("distance", -1)//Running 종료로부터 받은 값
-        val newChall = intent.getDoubleExtra("goal", 0.0)//새로운 챌린지 설정 여부
+        //val intent = getIntent()
+        //val distance = intent.getIntExtra("distance", 0) //Running 종료로부터 받은 값
+        initData()
+        //val newChall = intent.getDoubleExtra("goal", 0.0)//새로운 챌린지 설정 여부
         if(newChall!=0.0){ //새로운 정보를 받은 경우
             val newClg = ChallengeData(newChall, 0.0)
             curClg = newClg
@@ -115,9 +189,12 @@ class SecondActivity : AppCompatActivity() {
         if(curClg!=null){ // 챌린지를 진행 중이라면,
             curClg!!.cur = curClg!!.cur + distance
             binding.curChallenge.text = "현재 챌린지 : 이번 달 " + curClg!!.goal.toString() +" km"
-            binding.nowCom.text = curClg!!.cur.toString()+" km 완료"
+            //binding.nowCom.text = curClg!!.cur.toString()+" km 완료"
+            //binding.nowCom.text = total_distance.toString() + " km 완료"
+            binding.nowCom.text = String.format("%.2f", total_distance / 1000) + "  km 완료"
             binding.progressBar.max = curClg!!.goal.toInt()
-            binding.progressBar.setProgress(curClg!!.cur.toInt())
+            //binding.progressBar.setProgress(curClg!!.cur.toInt())
+            binding.progressBar.setProgress((total_distance/1000).toInt())
         }
 
     }
@@ -177,5 +254,85 @@ class SecondActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun initData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/challenge.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.toDouble()
+                newChall = runarr
+            }
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
+
+    fun writeTextFile(directory: String, filename: String, content: String) {
+        /* directory가 존재하는지 검사하고 없으면 생성 */
+        val dir = File(directory)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+
+        val writer = FileWriter(directory + "/" + filename)  // FileWriter 생성
+        println("write dir=${directory + "/" + filename}")
+        val buffer = BufferedWriter(writer)  // buffer에 담아서 속도 향상
+        //writer.write(content+ "\n")
+
+
+
+        buffer.write(content)
+        //buffer.newLine()// buffer로 내용 쓰고
+        buffer.close()  // buffer 닫기
+    }
+
+    private fun initTrophyData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/trophy.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+                trophy = runarr[0].toInt()
+                total_distance = runarr[1].toDouble()
+                println("$total_distance")
+
+            }
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
+
+
+    private fun initLevelData() {
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/level.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+                level = runarr[0].toInt()
+                expo = runarr[1].toInt()
+            }
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
+
+
 
 }
