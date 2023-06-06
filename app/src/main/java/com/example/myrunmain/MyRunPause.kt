@@ -28,6 +28,11 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.SphericalUtil
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -64,6 +69,14 @@ class MyRunPause : AppCompatActivity() {
     var goalPace = 0
     var goalExp = 0
     var goalLev = 0
+
+    var voice_on = 0
+    var voice_pause = 0
+    var countdown = 0
+    var voice_male = 0
+    var settingArray = intArrayOf(0,0,0,0)
+    //voice_on / voice_pause / countdown / voice_male
+
 
 
     //권한 설정시작
@@ -164,8 +177,10 @@ class MyRunPause : AppCompatActivity() {
         pace = intent.getDoubleExtra("pause_pace", 0.0)
 
 
-//        val intent_goal = getIntent()
-//        goalLen = intent_goal.getIntExtra("goalLenn", 0)
+
+
+        val intent_goal = getIntent()
+        goalLen = intent_goal.getIntExtra("goalLenn", 0)
 //        goalPace = intent_goal.getIntExtra("goalPacee", 0)
 //        goalExp = intent_goal.getIntExtra("goalExpp", 0)
 //        goalLev = intent_goal.getIntExtra("goalLevv", 0)
@@ -174,7 +189,24 @@ class MyRunPause : AppCompatActivity() {
         initmap()
         initPause()
         updateTextView()
-        initTTs()
+        initSettinglData()
+        voice_on = settingArray[0]
+        voice_pause = settingArray[1]
+        countdown = settingArray[2]
+        voice_male = settingArray[3]
+
+        if(voice_male == 0) {
+            initFemaleTTs()
+        }
+        else {
+            initMaleTTs()
+        }
+
+        if(countdown !=0) {
+            Toast.makeText(this, "$countdown 초 뒤에 시작합니다.", Toast.LENGTH_SHORT).show()
+            handler.postDelayed(runnable, (countdown * 1000).toLong())
+        }
+
     }
 
     fun initPause() {
@@ -233,9 +265,12 @@ class MyRunPause : AppCompatActivity() {
                     location.locations[location.locations.size - 1].longitude
                 )
                 if(location.locations.size >= 2) {
-                    calorie_distance += SphericalUtil.computeDistanceBetween(
+                    calorie_distance = SphericalUtil.computeDistanceBetween(
                         arrLoc[location.locations.size -1], arrLoc[location.locations.size-2]
                     )
+                    if(calorie_distance ==0.0) {
+                        auto_pause(voice_pause)
+                    }
                 }
                 setCurrentLocation(loc)
 
@@ -244,9 +279,31 @@ class MyRunPause : AppCompatActivity() {
     }
     //위치 세팅
 
+
+    private fun initSettinglData() {
+        try {
+            var i =0
+            val file = File("/data/data/com.example.myrunmain/files/setting.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+               settingArray[i] = line!!.toInt()
+                i++
+            }
+            //initLayout()
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
+
     fun auto_pause(pause_term:Int) {
         ticktok +=2
         if(ticktok == pause_term) {
+            handler.removeCallbacks(runnable)
             val intent_tic = Intent(this@MyRunPause, MyRunRunning::class.java)
             intent_tic.putExtra("starttime", startTime)
             intent_tic.putExtra("elapsedtime",elapsedTime)
@@ -274,10 +331,19 @@ class MyRunPause : AppCompatActivity() {
     //거리에 따라 알람 서비스 구현
 
     //tts 관련 함수 시작점
-    fun initTTs() {
+    fun initMaleTTs() {
         tts = TextToSpeech(this, ) {
             isTtsReady = true
             tts.language = Locale.KOREA
+            tts.setPitch(0.4f)
+        }
+    }
+
+    fun initFemaleTTs() {
+        tts = TextToSpeech(this, ) {
+            isTtsReady = true
+            tts.language = Locale.KOREA
+            tts.setPitch(1f)
         }
     }
 
@@ -326,7 +392,7 @@ class MyRunPause : AppCompatActivity() {
         val option_poly = PolylineOptions().color(Color.GRAY).addAll(arrLoc)
         option.position(loc)
         option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-        googleMap.addMarker(option)
+        //googleMap.addMarker(option)
         googleMap.addPolyline(option_poly)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f))
     }
@@ -346,6 +412,10 @@ class MyRunPause : AppCompatActivity() {
                 binding.textView9.text = timeText
                 setPace(distance, seconds)
                 setCalorie(seconds)
+                if(voice_on == 1) {
+                    var roundedNumber = BigDecimal(distance).setScale(1, RoundingMode.HALF_UP)
+                    distance_alarm(goalLen.toDouble(),roundedNumber.toDouble())
+                }
 
                 handler.postDelayed(this, 1000) // 1초마다 업데이트
 
