@@ -27,12 +27,8 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.CancellationToken
-import com.google.android.gms.tasks.CancellationTokenSource
-import com.google.android.gms.tasks.OnTokenCanceledListener
 import com.google.android.material.navigation.NavigationView
 import java.io.*
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding:ActivityMainBinding
@@ -53,8 +49,6 @@ class MainActivity : AppCompatActivity() {
     //Running 끝난 후 여기에 반영해주시면 됩니다!
     //경험치 증가 값은 예전 회의 때 정해서 노션에 있습니다.
     var expo = 0
-
-
 
 
     val permissions = arrayOf(
