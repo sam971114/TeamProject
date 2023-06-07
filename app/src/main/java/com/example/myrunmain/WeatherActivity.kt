@@ -100,7 +100,10 @@ class WeatherActivity : AppCompatActivity()  {
     private fun getWea(){
         runOnUiThread {
             scope.launch {
-                val doc = Jsoup.connect(url).get()
+                var doc = Jsoup.connect(url).get()
+                if(doc.select("#wob_tm").text()==""){
+                    doc = Jsoup.connect("https://www.google.com/search?q=서울날씨").get()
+                }
                 val weather = doc.select("#wob_dc").text().toString() // 날씨
                 val temp = doc.select("#wob_tm").text() // 기온
                 val rainp = doc.select("#wob_pp").text() // 강수 확률

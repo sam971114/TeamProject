@@ -1,11 +1,13 @@
 package com.example.myrunmain
 
 import android.annotation.SuppressLint
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.MenuItem
 import android.view.Surface
 import android.widget.Toast
@@ -109,19 +111,35 @@ class SettingActivity : AppCompatActivity() {
         while (scan.hasNextLine()) {
             datas.add(scan.nextLine())
         }
-        binding.btnVoiceTxt.text = "음성 피드백\n" + when (datas[0]) {
+//        binding.btnVoiceTxt.text = "음성 피드백\n" + when (datas[0]) {
+//            "0" -> "on"
+//            else -> "off"
+//        }
+//        binding.btnAutoPauseTxt.text = "러닝 자동 일시 정지\n" + when (datas[1]) {
+//            "0" -> "off"
+//            else -> datas[1] + "초"
+//        }
+//        binding.btnCountDownTxt.text = "카운트 다운\n" + when (datas[2]) {
+//            "0" -> "off"
+//            else -> datas[2] + "초"
+//        }
+//        binding.btnVoiceMaleTxt.text = "음성 피드백 성별\n" + when (datas[3]) {
+//            "0" -> "여성"
+//            else -> "남성"
+//        }
+        binding.btnVoiceTxt.text = when (datas[0]) {
             "0" -> "on"
             else -> "off"
         }
-        binding.btnAutoPauseTxt.text = "러닝 자동 일시 정지\n" + when (datas[1]) {
+        binding.btnAutoPauseTxt.text = when (datas[1]) {
             "0" -> "off"
             else -> datas[1] + "초"
         }
-        binding.btnCountDownTxt.text = "카운트 다운\n" + when (datas[2]) {
+        binding.btnCountDownTxt.text = when (datas[2]) {
             "0" -> "off"
             else -> datas[2] + "초"
         }
-        binding.btnVoiceMaleTxt.text = "음성 피드백 성별\n" + when (datas[3]) {
+        binding.btnVoiceMaleTxt.text = when (datas[3]) {
             "0" -> "여성"
             else -> "남성"
         }
@@ -144,7 +162,11 @@ class SettingActivity : AppCompatActivity() {
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[1]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[2]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[3]}")
-                btnVoiceTxt.text = "음성 피드백\n" + when (datas[0]) {
+//                btnVoiceTxt.text = "음성 피드백\n" + when (datas[0]) {
+//                    "0" -> "on"
+//                    else -> "off"
+//                }
+                btnVoiceTxt.text = when (datas[0]) {
                     "0" -> "on"
                     else -> "off"
                 }
@@ -161,7 +183,11 @@ class SettingActivity : AppCompatActivity() {
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[1]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[2]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[3]}")
-                btnAutoPauseTxt.text = "러닝 자동 일시 정지\n" + when (datas[1]) {
+//                btnAutoPauseTxt.text = "러닝 자동 일시 정지\n" + when (datas[1]) {
+//                    "0" -> "off"
+//                    else -> datas[1] + "초"
+//                }
+                btnAutoPauseTxt.text = when (datas[1]) {
                     "0" -> "off"
                     else -> datas[1] + "초"
                 }
@@ -178,7 +204,11 @@ class SettingActivity : AppCompatActivity() {
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[1]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[2]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[3]}")
-                btnCountDownTxt.text = "카운트 다운\n" + when (datas[2]) {
+//                btnCountDownTxt.text = "카운트 다운\n" + when (datas[2]) {
+//                    "0" -> "off"
+//                    else -> datas[2] + "초"
+//                }
+                btnCountDownTxt.text = when (datas[2]) {
                     "0" -> "off"
                     else -> datas[2] + "초"
                 }
@@ -193,7 +223,11 @@ class SettingActivity : AppCompatActivity() {
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[1]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[2]}")
                 writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "${datas[3]}")
-                btnVoiceMaleTxt.text = "음성 피드백 성별\n" + when (datas[3]) {
+//                btnVoiceMaleTxt.text = "음성 피드백 성별\n" + when (datas[3]) {
+//                    "0" -> "여성"
+//                    else -> "남성"
+//                }
+                btnVoiceMaleTxt.text = when (datas[3]) {
                     "0" -> "여성"
                     else -> "남성"
                 }

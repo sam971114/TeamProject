@@ -2,7 +2,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:layout_marginVertical="3dp"
+    android:background="@drawable/back_border">
 
     <TextView
         android:id="@+id/distanceTextView"
@@ -23,13 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="난이도"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/expTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="경험치"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
 </LinearLayout>

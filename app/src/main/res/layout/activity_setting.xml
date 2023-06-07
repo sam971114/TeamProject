@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +32,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="10">
+            android:layout_weight="10"
+            android:padding="15dp">
 
             <FrameLayout
                 android:id="@+id/btnVoice"
@@ -42,23 +44,39 @@
                 app:layout_constraintEnd_toStartOf="@+id/btnAutoPause"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/voice"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height= "match_parent"
                     android:orientation="vertical"
-                    android:layout_gravity="bottom">
+                    android:gravity="center">
+
+                    <ImageView
+                        android:padding="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:scaleType="fitCenter"
+                        app:srcCompat="@drawable/voice"/>
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="음성 피드백"
+                        android:gravity="center"/>
                     <TextView
                         android:id="@+id/btnVoiceTxt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="5dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         android:text="TextView"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center"/>
+
+
                 </LinearLayout>
             </FrameLayout>
 
@@ -71,22 +89,36 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btnVoice"
                 app:layout_constraintTop_toTopOf="parent">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/auto_pause"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="bottom">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:padding="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        app:srcCompat="@drawable/auto_pause"/>
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="자동 일시정지"
+                        android:gravity="center"/>
+
                     <TextView
                         android:id="@+id/btnAutoPauseTxt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="5dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         android:text="TextView"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center"/>
                 </LinearLayout>
             </FrameLayout>
@@ -100,22 +132,37 @@
                 app:layout_constraintEnd_toStartOf="@+id/btnCountDown"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnVoice">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/voice_male"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:layout_gravity="bottom">
+                    >
+
+                    <ImageView
+                        android:padding="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        app:srcCompat="@drawable/voice_male"/>
+
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="음성 피드백 성별"
+                        android:gravity="center" />
+
                     <TextView
                         android:id="@+id/btnVoiceMaleTxt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="5dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         android:text="TextView"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center"/>
                 </LinearLayout>
             </FrameLayout>
@@ -129,23 +176,35 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btnVoiceMale"
                 app:layout_constraintTop_toBottomOf="@+id/btnAutoPause">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/countdown"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="bottom">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:padding="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        app:srcCompat="@drawable/countdown"/>
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="카운트 다운"
+                        android:gravity="center"/>
                     <TextView
                         android:id="@+id/btnCountDownTxt"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="5dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
                         android:text="TextView"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center"/>
+
+
                 </LinearLayout>
             </FrameLayout>
 
@@ -153,8 +212,6 @@
 
 
     </LinearLayout>
-
-
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

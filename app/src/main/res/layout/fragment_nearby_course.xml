@@ -3,17 +3,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/nearby_course"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="근처 코스 추천"
-        android:textSize="24sp"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="74dp"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/hamberger_button"
+            app:popupTheme="@style/Theme.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="주변 코스 추천"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="76dp"
+            android:textSize="30dp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/current_location"
@@ -22,13 +37,22 @@
         android:text="현재 위치: "
         android:textSize="18sp"
         android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="10dp"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nearby_courses_recycler"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/nearby_row"/>
+        android:layout_weight="9"
+        android:padding="20dp"
+        android:background="#DCDCDC">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/nearby_courses_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:padding="10dp"
+            tools:listitem="@layout/nearby_row"
+            />
+    </LinearLayout>
 
 </LinearLayout>

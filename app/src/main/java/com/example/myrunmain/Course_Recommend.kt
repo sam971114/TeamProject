@@ -11,15 +11,11 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.example.myrunmain.databinding.FragmentCourseRecommendBinding
 import java.io.File
 import java.util.*
-import android.text.TextUtils
 import android.util.Log
 import java.io.BufferedWriter
-import java.io.FileOutputStream
 import java.io.FileWriter
 
 
