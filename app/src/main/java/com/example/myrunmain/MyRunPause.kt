@@ -65,6 +65,10 @@ class MyRunPause : AppCompatActivity() {
     var ticktok:Int = 0
     //변수세팅
 
+    var firalr = false
+    var secalr = false
+    var trdalr = false
+    var finishalr = false
     var goalLen = 0
     var goalPace = 0
     var goalExp = 0
@@ -191,8 +195,8 @@ class MyRunPause : AppCompatActivity() {
         updateTextView()
         initSettinglData()
         voice_on = settingArray[0]
-        voice_pause = settingArray[1]
         countdown = settingArray[2]
+        voice_pause = settingArray[1] + 1
         voice_male = settingArray[3]
 
         if(voice_male == 0) {
@@ -204,9 +208,7 @@ class MyRunPause : AppCompatActivity() {
 
         if(countdown !=0) {
             Toast.makeText(this, "$countdown 초 뒤에 시작합니다.", Toast.LENGTH_SHORT).show()
-            handler.postDelayed(runnable, (countdown * 1000).toLong())
         }
-
     }
 
     fun initPause() {
@@ -264,14 +266,15 @@ class MyRunPause : AppCompatActivity() {
                     location.locations[location.locations.size - 1].latitude,
                     location.locations[location.locations.size - 1].longitude
                 )
-                if(location.locations.size >= 2) {
+                /*if(location.locations.size >= 2) {
                     calorie_distance = SphericalUtil.computeDistanceBetween(
                         arrLoc[location.locations.size -1], arrLoc[location.locations.size-2]
                     )
+                    println(calorie_distance)
                     if(calorie_distance ==0.0) {
                         auto_pause(voice_pause)
                     }
-                }
+                }*/
                 setCurrentLocation(loc)
 
             }
@@ -301,7 +304,7 @@ class MyRunPause : AppCompatActivity() {
     }
 
     fun auto_pause(pause_term:Int) {
-        ticktok +=2
+        ticktok +=1
         if(ticktok == pause_term) {
             handler.removeCallbacks(runnable)
             val intent_tic = Intent(this@MyRunPause, MyRunRunning::class.java)
@@ -316,16 +319,23 @@ class MyRunPause : AppCompatActivity() {
     //자동 일시정지
 
     fun distance_alarm(distance_goal:Double, now_distance:Double) {
-        if(distance_goal / 4 == now_distance) {
+        if(((distance_goal / 4) <= now_distance) && firalr ==false) {
+            firalr = true
             tts.speak("목표 거리의 4분의 1완료했습니다.", TextToSpeech.QUEUE_ADD, null, null)
         }
 
-        if(distance_goal / 2 == now_distance) {
+        if(((distance_goal / 2) <= now_distance) && secalr == false) {
+            secalr = true
             tts.speak("목표 거리의 2분의 1완료했습니다.", TextToSpeech.QUEUE_ADD, null, null)
         }
 
-        if(distance_goal / 4 * 3 == now_distance) {
-            tts.speak("목표 거리의 2분의 1완료했습니다.", TextToSpeech.QUEUE_ADD, null, null)
+        if(((distance_goal / 4 * 3) <= now_distance) && trdalr == false) {
+            trdalr = true
+            tts.speak("목표 거리의 4분의 3완료했습니다.", TextToSpeech.QUEUE_ADD, null, null)
+        }
+        if((distance_goal <= now_distance) && finishalr == false) {
+            finishalr = true
+            tts.speak("목표 거리 완료했습니다.", TextToSpeech.QUEUE_ADD, null, null)
         }
     }
     //거리에 따라 알람 서비스 구현
@@ -366,6 +376,10 @@ class MyRunPause : AppCompatActivity() {
             temp_distance = SphericalUtil.computeDistanceBetween(
                 arrLoc[arrLoc.size -1], arrLoc[arrLoc.size-2]
             )
+            /*if(temp_distance == 0.0) {
+                auto_pause(voice_pause)
+                println(ticktok)
+            }*/
         }
         distance += temp_distance
         binding.textView7.text = String.format("%.2f", distance / 1000) + "  km"
@@ -401,7 +415,7 @@ class MyRunPause : AppCompatActivity() {
     private fun updateTextView() {
         runnable = object : Runnable {
             override fun run() {
-                val currentTime = System.currentTimeMillis()
+                var currentTime = System.currentTimeMillis()
                 elapsedTime = before_pauseTime + currentTime - startTime
 
                 val seconds = (elapsedTime / 1000) % 60
@@ -412,12 +426,31 @@ class MyRunPause : AppCompatActivity() {
                 binding.textView9.text = timeText
                 setPace(distance, seconds)
                 setCalorie(seconds)
-                if(voice_on == 1) {
-                    var roundedNumber = BigDecimal(distance).setScale(1, RoundingMode.HALF_UP)
+                if(voice_on == 0 && goalLen !=0) {
+                    var roundedNumber = BigDecimal(distance / 1000).setScale(2, RoundingMode.HALF_UP)
+                    println(roundedNumber)
+                    println(goalLen.toDouble() / 4)
                     distance_alarm(goalLen.toDouble(),roundedNumber.toDouble())
                 }
-
-                handler.postDelayed(this, 1000) // 1초마다 업데이트
+                if(countdown !=0) {
+                    handler.postDelayed(this, countdown.toLong() * 1000)
+                    startTime = startTime + (countdown * 1000).toLong()
+                    countdown = 0
+                    //얘만 수정하면 countdown 해결
+                }
+                else {
+                    handler.postDelayed(this, 1000) // 1초마다 업데이트
+                    var temp_distance:Double = 0.0
+                    if(arrLoc.size >= 2) {
+                        temp_distance = SphericalUtil.computeDistanceBetween(
+                            arrLoc[arrLoc.size -1], arrLoc[arrLoc.size-2]
+                        )
+                        if(temp_distance == 0.0) {
+                            auto_pause(voice_pause)
+                            //println(ticktok)
+                        }
+                    }
+                }
 
                 if(destroy == 1) {
                     handler.removeCallbacks(runnable)
