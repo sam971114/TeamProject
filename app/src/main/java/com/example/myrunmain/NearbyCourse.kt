@@ -109,24 +109,81 @@ class NearbyCourseFragment : Fragment() {
                         binding?.currentLocation?.text = "현재 위치: ${addresses[0].getAddressLine(0)}"
                     }
                 }
+                val gwangjinLocation = Location("GwangJin")
+                gwangjinLocation.latitude = 37.5438
+                gwangjinLocation.longitude = 127.1078
+
+                val gwanakmtLocation = Location("GwanakMt")
+                gwanakmtLocation.latitude = 37.4752
+                gwanakmtLocation.longitude = 126.971
 
                 val songpaLocation = Location("Songpa")
                 songpaLocation.latitude = 37.524429
                 songpaLocation.longitude = 127.115750
 
-                val distance = location.distanceTo(songpaLocation)
+                val seoul1Location = Location("Seoul Course1")
+                seoul1Location.latitude = 37.6894
+                seoul1Location.longitude = 127.0471
+
+                val seoul2Location = Location("Seoul Course2")
+                seoul2Location.latitude = 37.6206
+                seoul2Location.longitude = 127.0851
+
+                val seoul3Location = Location("Seoul Course3")
+                seoul3Location.latitude = 37.546
+                seoul3Location.longitude = 127.109
+
+                val seoul4Location = Location("Seoul Course4")
+                seoul4Location.latitude = 37.4865
+                seoul4Location.longitude = 127.1024
+
+                val seoul5Location = Location("Seoul Course5")
+                seoul5Location.latitude = 37.4695
+                seoul5Location.longitude = 126.9783
+
+                val seoul6Location = Location("Seoul Course6")
+                seoul6Location.latitude = 37.4342
+                seoul6Location.longitude = 126.9021
+
+                val seoul7Location = Location("Seoul Course7")
+                seoul7Location.latitude = 37.5637
+                seoul7Location.longitude = 126.8565
+
+                val seoul8Location = Location("Seoul Course8")
+                seoul8Location.latitude = 37.6276
+                seoul8Location.longitude = 126.937
+
+                val distance1 = location.distanceTo(gwangjinLocation)
+                val distance2 = location.distanceTo(gwanakmtLocation)
+                val distance3 = location.distanceTo(songpaLocation)
+                val distance4 = location.distanceTo(seoul1Location)
+                val distance5 = location.distanceTo(seoul2Location)
+                val distance6 = location.distanceTo(seoul3Location)
+                val distance7 = location.distanceTo(seoul4Location)
+                val distance8 = location.distanceTo(seoul5Location)
+                val distance9 = location.distanceTo(seoul6Location)
+                val distance10 = location.distanceTo(seoul7Location)
+                val distance11 = location.distanceTo(seoul8Location)
 
                 val courseList = listOf(
-                    NearData("Course 1", "5km", "1km", songpaPath),
-                    NearData("Course 2", "10km", "2km", songpaPath),
-                    NearData("송파 둘레길", "15km", "${distance}km", songpaPath)
+                    NearData("광진구 둘레길", "33km", "${distance1}km"),
+                    NearData("관악산 둘레길", "31.2km", "${distance2}km"),
+                    NearData("송파 둘레길", "21km", "${distance3}km"),
+                    NearData("서울 둘레길 1코스 수락 불암산코스", "14.3km", "${distance4}km"),
+                    NearData("서울 둘레길 2코스 용마 아차산코스", "12.6km", "${distance5}km"),
+                    NearData("서울 둘레길 3코스 고덕 일자산코스", "26.1km", "${distance6}km"),
+                    NearData("서울 둘레길 4코스 대모 우면산코스", "17.9km", "${distance7}km"),
+                    NearData("서울 둘레길 5코스 관악산코스", "12.7km", "${distance8}km"),
+                    NearData("서울 둘레길 6코스 안양천코스", "18km", "${distance9}km"),
+                    NearData("서울 둘레길 7코스 봉산 앵봉산코스", "16.6km", "${distance10}km"),
+                    NearData("서울 둘레길 8코스 북한산코스", "34.5km", "${distance11}km")
                 )
 
                 val adapter = NearbyCourseAdapter(courseList, object : NearbyCourseAdapter.OnCourseItemClickListener {
                     override fun onCourseClick(course: NearData) {
                         val fragment = MainWindowFragment().apply {
                             arguments = Bundle().apply {
-                                putParcelableArrayList("path", ArrayList(course.path))
+                                putParcelableArrayList("path", ArrayList(songpaPath))
                             }
                         }
                         requireActivity().supportFragmentManager.beginTransaction()
