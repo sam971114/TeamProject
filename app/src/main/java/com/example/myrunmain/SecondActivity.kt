@@ -91,7 +91,7 @@ class SecondActivity : AppCompatActivity() {
             trophy++
             binding.progressBar.setProgress(0)
             try {
-                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,0")
+                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,$newChall")
                 println("success")
             } catch ( e:Exception) {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()

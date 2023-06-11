@@ -48,6 +48,7 @@ class MyRunPause : AppCompatActivity() {
     var startupdate = false
     val arrLoc = ArrayList<LatLng>()
     var pace = 0.0
+    var firstMarker = false
 
     lateinit var tts:TextToSpeech
     var isTtsReady = false
@@ -179,6 +180,7 @@ class MyRunPause : AppCompatActivity() {
         before_pauseTime = intent.getLongExtra("pause_elapsedtime", 0)
         distance = intent.getDoubleExtra("pause_distance", 0.0)
         pace = intent.getDoubleExtra("pause_pace", 0.0)
+        firstMarker = false
 
 
 
@@ -198,6 +200,9 @@ class MyRunPause : AppCompatActivity() {
         countdown = settingArray[2]
         voice_pause = settingArray[1] + 1
         voice_male = settingArray[3]
+
+
+
 
         if(voice_male == 0) {
             initFemaleTTs()
@@ -225,11 +230,13 @@ class MyRunPause : AppCompatActivity() {
             }
 
             imageView6.setOnClickListener {
+                firstMarker = false
                 initLocation()
                 Toast.makeText(this@MyRunPause, "GPS가 갱신되었습니다.", Toast.LENGTH_SHORT).show()
                 //GPS 다시 세팅
             }
             textView14.setOnClickListener {
+                firstMarker = false
                 initLocation()
                 Toast.makeText(this@MyRunPause, "GPS가 갱신되었습니다.", Toast.LENGTH_SHORT).show()
                 //GPS 다시 세팅
@@ -406,11 +413,25 @@ class MyRunPause : AppCompatActivity() {
         val option_poly = PolylineOptions().color(Color.GRAY).addAll(arrLoc)
         option.position(loc)
         option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        if(firstMarker == false) {
+            firstMarker = true
+            googleMap.addMarker(option)
+        }
         //googleMap.addMarker(option)
         googleMap.addPolyline(option_poly)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f))
     }
     //현재 위치 세팅(setText통해서 distance 세팅까지)
+
+    fun setFirstLocation(location:LatLng) {
+        arrLoc.add(location)
+        setText(arrLoc)
+        val option = MarkerOptions()
+        option.position(loc)
+        option.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+        googleMap.addMarker(option)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 16.0f))
+    }
 
     private fun updateTextView() {
         runnable = object : Runnable {

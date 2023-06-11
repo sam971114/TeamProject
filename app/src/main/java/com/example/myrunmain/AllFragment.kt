@@ -30,6 +30,8 @@ class AllFragment : Fragment() {
     var diffi = 0
     var expo = 0
     var level = 0
+    var challengeExpo = 0
+    var trophy = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +43,7 @@ class AllFragment : Fragment() {
 
         //initLevelData()
         initData()
+        //initChallengeData()
         try {
             writeTextFile("/data/data/com.example.myrunmain/files", "medal.txt", "$easy,$middle,$diffi")
         } catch ( e:Exception) {
@@ -116,6 +119,32 @@ class AllFragment : Fragment() {
                 val runarr = line!!.split(",")
                 level = runarr[0].toInt()
                 expo = runarr[1].toInt()
+            }
+
+            reader.close()
+        } catch (e: Exception) {
+            println("파일 읽기 오류: ${e.message}")
+        }
+    }
+
+
+    private fun initChallengeData(){
+        try {
+            val file = File("/data/data/com.example.myrunmain/files/trophy.txt")
+            val reader = BufferedReader(FileReader(file))
+
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                println(line)
+                val runarr = line!!.split(",")
+                trophy = runarr[0].toInt()
+                challengeExpo = runarr[1].toInt()
+                println(challengeExpo)
+                println(expo)
+                expo += challengeExpo
+                challengeExpo = 0
+                println(challengeExpo)
+                println(expo)
             }
 
             reader.close()

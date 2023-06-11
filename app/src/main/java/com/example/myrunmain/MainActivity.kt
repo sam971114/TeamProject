@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     //Running 끝난 후 여기에 반영해주시면 됩니다!
     //경험치 증가 값은 예전 회의 때 정해서 노션에 있습니다.
     var expo = 0
+    var challengExpo = 0
 
 
     val permissions = arrayOf(
@@ -204,12 +205,27 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
-
         initmap()
         initMedalData()
         initLevelData()
         initTrophyData()
         initLayout()
+        level = expo / 100
+        curprogress = expo % 100
+        setLevel()
+        try {
+            writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "${comp[3]},$challengExpo")
+        } catch ( e:Exception) {
+            Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+
+        try {
+            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo")
+        } catch ( e:Exception) {
+            Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+
+
         if(goalLen != 0) {
             Toast.makeText(this, "현재 일일 코스 \n 목표거리 : $goalLen km , 목표 페이스 : $goalPace km/h", Toast.LENGTH_SHORT).show()
         }
@@ -272,11 +288,11 @@ class MainActivity : AppCompatActivity() {
             val nextIntent = Intent(this, WeatherActivity::class.java)
             startActivity(nextIntent)
         }
-        setLevel()
+        //setLevel()
     }
     private fun setLevel(){
         //이 정보는 main에서 저장하는 걸로
-        binding.level4.text = "Lv. "+level.toString()
+        binding.level4.text = "Lv. "+level.toInt().toString()
         binding.levelProgressBar.progress = curprogress
         binding.medalnum1.text = comp[0].toString()+"회"
         binding.medalnum2.text = comp[1].toString()+"회"
@@ -448,8 +464,7 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             println("파일 읽기 오류: ${e.message}")
         }
-        level = expo / 100
-        curprogress = expo % 100
+
     }
 
     private fun initTrophyData() {
@@ -462,7 +477,13 @@ class MainActivity : AppCompatActivity() {
                 println(line)
                 val runarr = line!!.split(",")
                comp[3] = runarr[0].toInt()
-
+                challengExpo = runarr[1].toDouble().toInt()
+                println(challengExpo)
+                println(expo)
+                expo += challengExpo
+                challengExpo = 0
+                println(challengExpo)
+                println(expo)
             }
             initLayout()
 
