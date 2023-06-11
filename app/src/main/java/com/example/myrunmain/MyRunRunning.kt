@@ -39,6 +39,10 @@ class MyRunRunning : AppCompatActivity() {
         private const val KEY_ELAPSED_TIME = "elapsed_time"
     }
 
+    override fun onBackPressed() {
+        //super.onBackPressed()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMyRunRunningBinding.inflate(layoutInflater)

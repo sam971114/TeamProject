@@ -49,6 +49,13 @@ class SecondActivity : AppCompatActivity() {
     var expo = 0
     var distance = 0.0
 
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val nextIntent = Intent(this, MainActivity::class.java)
+        startActivity(nextIntent)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySecondBinding.inflate(layoutInflater)

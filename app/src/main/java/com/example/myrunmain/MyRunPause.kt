@@ -82,7 +82,9 @@ class MyRunPause : AppCompatActivity() {
     var settingArray = intArrayOf(0,0,0,0)
     //voice_on / voice_pause / countdown / voice_male
 
-
+    override fun onBackPressed() {
+        //super.onBackPressed()
+    }
 
     //권한 설정시작
     val permissions = arrayOf(
