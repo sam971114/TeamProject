@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity() {
         val dir_setting = File("/data/data/com.example.myrunmain/files/setting.txt")
         if (!dir_setting.exists()) {
             try {
-                writeTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0,0,0,0")
+                writeTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0\n0\n0\n0\n")
                 println("success")
             } catch ( e:Exception) {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
