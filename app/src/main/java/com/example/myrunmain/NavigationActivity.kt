@@ -27,17 +27,6 @@ class NavigationActivity : AppCompatActivity() {
                 val intent_main = Intent(this@NavigationActivity, MainActivity::class.java)
                 startActivity(intent_main)
             }
-
-            2 -> {
-                val fragment = CourseRecomFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
-                //.addToBackStack(null).commit()
-            }
-
-            3 -> {
-                val fragment = NearbyCourseFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit()
-            }
         }
 
         setSupportActionBar(binding.toolbar)
@@ -51,13 +40,13 @@ class NavigationActivity : AppCompatActivity() {
                 val intent_main = Intent(this@NavigationActivity, MainActivity::class.java)
                 startActivity(intent_main)
             }
-            R.id.nav_recom -> {
-                val fragment = CourseRecomFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit()
+            R.id.nav_daily -> {
+                val intent_record = Intent(this@NavigationActivity, DailyActivity::class.java)
+                startActivity(intent_record)
             }
             R.id.nav_nearby -> {
-                val fragment = NearbyCourseFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack(null).commit()
+                val intent_record = Intent(this@NavigationActivity, NearbyCourseActivity::class.java)
+                startActivity(intent_record)
             }
             R.id.nav_record -> {
                 val intent_record = Intent(this@NavigationActivity, SecondActivity::class.java)
@@ -82,7 +71,7 @@ class NavigationActivity : AppCompatActivity() {
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
+            setHomeAsUpIndicator(R.drawable.menu_fin)
         }
     }
 

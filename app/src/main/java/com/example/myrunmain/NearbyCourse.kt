@@ -1,36 +1,33 @@
 package com.example.myrunmain
 
+import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myrunmain.databinding.FragmentNearbyCourseBinding
-import com.google.android.gms.location.LocationServices
-import android.Manifest
-import android.content.Intent
-import android.graphics.Color
-import android.location.Address
-import com.example.myrunmain.MainWindowFragment
-import com.example.myrunmain.NearData
-import com.example.myrunmain.NearbyCourseAdapter
+import com.example.myrunmain.databinding.ActivityNearbyCourseBinding
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.material.navigation.NavigationView
 import java.util.*
 
-class NearbyCourseFragment : Fragment() {
-    private var binding: FragmentNearbyCourseBinding? = null
+class NearbyCourseActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityNearbyCourseBinding
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var googlemap: GoogleMap
 
-    val songpaPath = arrayListOf<LatLng>(
+    /*val songpaPath = arrayListOf<LatLng>(
         LatLng(37.4798, 127.1162),
         LatLng(37.5139, 127.0695),
         LatLng(37.495, 127.1011),
@@ -72,43 +69,84 @@ class NearbyCourseFragment : Fragment() {
         LatLng(37.4763, 127.1261),
         LatLng(37.4771, 127.1214),
         LatLng(37.478, 127.1175)
-    )
+    )*/
 
     companion object {
         private const val REQUEST_LOCATION_PERMISSION = 1
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentNearbyCourseBinding.inflate(inflater, container, false)
-        return binding?.root
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityNearbyCourseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+
+        navigationView.setNavigationItemSelectedListener { menuItem -> when (menuItem.itemId) {
+            R.id.main_win -> {
+                val intent_main = Intent(this@NearbyCourseActivity, MainActivity::class.java)
+                startActivity(intent_main)
+            }
+            R.id.nav_daily -> {
+                val intent_sec = Intent(this@NearbyCourseActivity, DailyActivity::class.java)
+                startActivity(intent_sec)
+            }
+            R.id.nav_nearby -> {
+
+            }
+            R.id.nav_record -> {
+                val intent_record = Intent(this@NearbyCourseActivity, SecondActivity::class.java)
+                startActivity(intent_record)
+            }
+            R.id.nav_weather -> {
+                val intent_weather = Intent(this@NearbyCourseActivity, WeatherActivity::class.java)
+                startActivity(intent_weather)
+            }
+            R.id.nav_challenge -> {
+                val intent_challenge = Intent(this@NearbyCourseActivity, ChallegeActivity::class.java)
+                startActivity(intent_challenge)
+            }
+            R.id.nav_setting -> {
+                val intent_setting = Intent(this@NearbyCourseActivity, SettingActivity::class.java)
+                startActivity(intent_setting)
+            }
+        }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.menu_fin)
+        }
+
+        initLayout()
     }
 
-    /*fun DrawCourse(location: LatLng){
-        songpaLoc.add(location)
-        val option_poly = PolylineOptions().color(Color.GRAY).addAll(songpaLoc)
-        googlemap.addPolyline(option_poly)
-    }*/
+    private fun initLayout() {
+        val adapter = NearbyCourseAdapter(emptyList())
+        binding.nearbyCoursesRecycler.adapter = adapter
+        binding.nearbyCoursesRecycler.layoutManager = LinearLayoutManager(this)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding?.nearbyCoursesRecycler?.layoutManager = LinearLayoutManager(context)
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-            PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) !=
-            PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), REQUEST_LOCATION_PERMISSION)
             return
         }
 
         fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
-                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                // 현재 위치 표시
+                val geocoder = Geocoder(this, Locale.getDefault())
                 geocoder.getFromLocation(location.latitude, location.longitude, 1)?.let { addresses ->
                     if (addresses.isNotEmpty()) {
-                        binding?.currentLocation?.text = "현재 위치: ${addresses[0].getAddressLine(0)}"
+                        binding.currentLocation.text = "현재 위치: ${addresses[0].getAddressLine(0)}"
                     }
                 }
+
                 val gwangjinLocation = Location("GwangJin")
                 gwangjinLocation.latitude = 37.5438
                 gwangjinLocation.longitude = 127.1078
@@ -153,17 +191,17 @@ class NearbyCourseFragment : Fragment() {
                 seoul8Location.latitude = 37.6276
                 seoul8Location.longitude = 126.937
 
-                val distance1 = location.distanceTo(gwangjinLocation)
-                val distance2 = location.distanceTo(gwanakmtLocation)
-                val distance3 = location.distanceTo(songpaLocation)
-                val distance4 = location.distanceTo(seoul1Location)
-                val distance5 = location.distanceTo(seoul2Location)
-                val distance6 = location.distanceTo(seoul3Location)
-                val distance7 = location.distanceTo(seoul4Location)
-                val distance8 = location.distanceTo(seoul5Location)
-                val distance9 = location.distanceTo(seoul6Location)
-                val distance10 = location.distanceTo(seoul7Location)
-                val distance11 = location.distanceTo(seoul8Location)
+                val distance1 = location.distanceTo(gwangjinLocation) / 1000
+                val distance2 = location.distanceTo(gwanakmtLocation) / 1000
+                val distance3 = location.distanceTo(songpaLocation) / 1000
+                val distance4 = location.distanceTo(seoul1Location) / 1000
+                val distance5 = location.distanceTo(seoul2Location) / 1000
+                val distance6 = location.distanceTo(seoul3Location) / 1000
+                val distance7 = location.distanceTo(seoul4Location) / 1000
+                val distance8 = location.distanceTo(seoul5Location) / 1000
+                val distance9 = location.distanceTo(seoul6Location) / 1000
+                val distance10 = location.distanceTo(seoul7Location) / 1000
+                val distance11 = location.distanceTo(seoul8Location) / 1000
 
                 val courseList = listOf(
                     NearData("광진구 둘레길", "33km", "${distance1}km"),
@@ -179,26 +217,19 @@ class NearbyCourseFragment : Fragment() {
                     NearData("서울 둘레길 8코스 북한산코스", "34.5km", "${distance11}km")
                 )
 
-                val adapter = NearbyCourseAdapter(courseList, object : NearbyCourseAdapter.OnCourseItemClickListener {
-                    override fun onCourseClick(course: NearData) {
-                        val fragment = MainWindowFragment().apply {
-                            arguments = Bundle().apply {
-                                putParcelableArrayList("path", ArrayList(songpaPath))
-                            }
-                        }
-                        requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .addToBackStack(null)
-                            .commit()
-                    }
-                })
-                binding?.nearbyCoursesRecycler?.adapter = adapter
+                adapter.addData(courseList)
+                adapter.notifyDataSetChanged()
             }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                drawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

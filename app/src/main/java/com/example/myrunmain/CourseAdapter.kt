@@ -3,19 +3,18 @@ package com.example.myrunmain
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.myrunmain.CourseData
-import com.example.myrunmain.databinding.CourseRowBinding
+import com.example.myrunmain.databinding.DailyRowBinding
 
 class CourseAdapter(private val runningList: List<CourseData>,
                     private val listener: CourseItemClickListener) : RecyclerView.Adapter<CourseAdapter.CourseRecomViewHolder>() {
-    inner class CourseRecomViewHolder(val binding: CourseRowBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class CourseRecomViewHolder(val binding: DailyRowBinding) : RecyclerView.ViewHolder(binding.root)
 
     interface CourseItemClickListener {
         fun onCourseItemClick(courseData: CourseData)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseRecomViewHolder {
-        val binding = CourseRowBinding.inflate(LayoutInflater.from(parent.context),
+        val binding = DailyRowBinding.inflate(LayoutInflater.from(parent.context),
             parent, false)
         return CourseRecomViewHolder(binding)
     }

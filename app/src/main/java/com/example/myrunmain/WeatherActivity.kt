@@ -36,14 +36,12 @@ class WeatherActivity : AppCompatActivity()  {
                 val intent_main = Intent(this@WeatherActivity, MainActivity::class.java)
                 startActivity(intent_main)
             }
-            R.id.nav_recom -> {
-                val intent_sec = Intent(this@WeatherActivity, NavigationActivity::class.java)
-                intent_sec.putExtra("number", 2)
+            R.id.nav_daily -> {
+                val intent_sec = Intent(this@WeatherActivity, DailyActivity::class.java)
                 startActivity(intent_sec)
             }
             R.id.nav_nearby -> {
-                val intent_trd = Intent(this@WeatherActivity, NavigationActivity::class.java)
-                intent_trd.putExtra("number", 3)
+                val intent_trd = Intent(this@WeatherActivity, NearbyCourseActivity::class.java)
                 startActivity(intent_trd)
             }
             R.id.nav_record -> {
@@ -68,7 +66,7 @@ class WeatherActivity : AppCompatActivity()  {
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
+            setHomeAsUpIndicator(R.drawable.menu_fin)
         }
 
         initLayout()

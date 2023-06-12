@@ -242,14 +242,12 @@ class MainActivity : AppCompatActivity() {
             R.id.main_win -> {
 
             }
-            R.id.nav_recom -> {
-                val intent_sec = Intent(this, NavigationActivity::class.java)
-                intent_sec.putExtra("number", 2)
+            R.id.nav_daily -> {
+                val intent_sec = Intent(this, DailyActivity::class.java)
                 startActivity(intent_sec)
             }
             R.id.nav_nearby -> {
-                val intent_trd = Intent(this, NavigationActivity::class.java)
-                intent_trd.putExtra("number", 3)
+                val intent_trd = Intent(this, NearbyCourseActivity::class.java)
                 startActivity(intent_trd)
             }
             R.id.nav_record -> {

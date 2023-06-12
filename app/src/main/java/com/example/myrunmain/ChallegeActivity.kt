@@ -43,14 +43,12 @@ class ChallegeActivity : AppCompatActivity() {
                 val intent_main = Intent(this@ChallegeActivity, MainActivity::class.java)
                 startActivity(intent_main)
             }
-            R.id.nav_recom -> {
-                val intent_sec = Intent(this@ChallegeActivity, NavigationActivity::class.java)
-                intent_sec.putExtra("number", 2)
+            R.id.nav_daily -> {
+                val intent_sec = Intent(this@ChallegeActivity, DailyActivity::class.java)
                 startActivity(intent_sec)
             }
             R.id.nav_nearby -> {
-                val intent_trd = Intent(this@ChallegeActivity, NavigationActivity::class.java)
-                intent_trd.putExtra("number", 3)
+                val intent_trd = Intent(this@ChallegeActivity, NearbyCourseActivity::class.java)
                 startActivity(intent_trd)
             }
             R.id.nav_record -> {
@@ -75,7 +73,7 @@ class ChallegeActivity : AppCompatActivity() {
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
+            setHomeAsUpIndicator(R.drawable.menu_fin)
         }
     }
 

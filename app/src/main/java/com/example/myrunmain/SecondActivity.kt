@@ -129,14 +129,12 @@ class SecondActivity : AppCompatActivity() {
                 val intent_main = Intent(this@SecondActivity, MainActivity::class.java)
                 startActivity(intent_main)
             }
-            R.id.nav_recom -> {
-                val intent_sec = Intent(this@SecondActivity, NavigationActivity::class.java)
-                intent_sec.putExtra("number", 2)
+            R.id.nav_daily -> {
+                val intent_sec = Intent(this@SecondActivity, DailyActivity::class.java)
                 startActivity(intent_sec)
             }
             R.id.nav_nearby -> {
-                val intent_trd = Intent(this@SecondActivity, NavigationActivity::class.java)
-                intent_trd.putExtra("number", 3)
+                val intent_trd = Intent(this@SecondActivity, NearbyCourseActivity::class.java)
                 startActivity(intent_trd)
             }
             R.id.nav_record -> {
@@ -161,7 +159,7 @@ class SecondActivity : AppCompatActivity() {
 
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu)
+            setHomeAsUpIndicator(R.drawable.menu_fin)
         }
         //initGoal()
 
