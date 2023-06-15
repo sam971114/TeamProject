@@ -473,7 +473,7 @@ class MyRunPause : AppCompatActivity() {
                         temp_distance = SphericalUtil.computeDistanceBetween(
                             arrLoc[arrLoc.size -1], arrLoc[arrLoc.size-2]
                         )
-                        if(temp_distance == 0.0) {
+                        if(temp_distance == 0.0 && voice_pause !=0) {
                             auto_pause(voice_pause)
                             println(ticktok)
                         }
@@ -489,13 +489,7 @@ class MyRunPause : AppCompatActivity() {
                     intent_sec.putExtra("elapsedtime",elsp_time)
                     intent_sec.putExtra("distance", distance)
                     intent_sec.putExtra("pace", pace)
-
-
-
-//                    intent_sec.putExtra("goalLennn", goalLen)
-//                    intent_sec.putExtra("goalPaceee", goalPace)
-//                    intent_sec.putExtra("goalExppp", goalExp)
-//                    intent_sec.putExtra("goalLevvv", goalLev)
+                    
                     startActivity(intent_sec)
                 }
             }

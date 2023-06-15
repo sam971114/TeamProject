@@ -233,9 +233,8 @@ class MainActivity : AppCompatActivity() {
         initmap()
         initMedalData()
         initLevelData()
+        curprogress = expo
         initTrophyData()
-        level = expo / 100
-        curprogress = expo % 100
         setLevel()
         initLayout()
         try {
@@ -478,6 +477,7 @@ class MainActivity : AppCompatActivity() {
             while (reader.readLine().also { line = it } != null) {
                 println(line)
                 val runarr = line!!.split(",")
+                level = runarr[0].toInt()
                 expo = runarr[1].toInt()
             }
 
@@ -500,13 +500,6 @@ class MainActivity : AppCompatActivity() {
                 println(line)
                 val runarr = line!!.split(",")
                comp[3] = runarr[0].toInt()
-                challengExpo = runarr[1].toDouble().toInt()
-                println(challengExpo)
-                println(expo)
-                expo += challengExpo
-                challengExpo = 0
-                println(challengExpo)
-                println(expo)
             }
             initLayout()
 

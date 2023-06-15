@@ -41,7 +41,7 @@ class AllFragment : Fragment() {
         binding = AllFragmentBinding.inflate(inflater, container, false)
 
 
-        //initLevelData()
+        initLevelData()
         initData()
         //initChallengeData()
         try {

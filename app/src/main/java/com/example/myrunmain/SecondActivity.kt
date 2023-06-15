@@ -47,6 +47,7 @@ class SecondActivity : AppCompatActivity() {
     var trophy = 0
     var level = 0
     var expo = 0
+    var plus_expo = 0
     var distance = 0.0
 
     override fun onBackPressed() {
@@ -69,36 +70,20 @@ class SecondActivity : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
 
-        val dir = File("/data/data/com.example.myrunmain/files/trophy.txt")
-        if (!dir.exists()) {
-            dir.mkdirs()
-            total_distance = 0.0
-            trophy = 0
-        }
-        else {
-            initTrophyData()
-        }
 
-        val dir_level = File("/data/data/com.example.myrunmain/files/level.txt")
-        if (!dir_level.exists()) {
-            dir_level.mkdirs()
-            level = 0
-            expo = 0
-        }
-        else {
-            initLevelData()
-        }
-
+        initTrophyData()
+        initLevelData()
         total_distance += distance
         initData()
 
 
         if(total_distance / 1000 >= newChall) {
-            println("$total_distance")
+            plus_expo = newChall.toInt()
+            println(plus_expo)
             trophy++
             binding.progressBar.setProgress(0)
             try {
-                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,$newChall")
+                writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,0")
                 println("success")
             } catch ( e:Exception) {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
@@ -109,7 +94,7 @@ class SecondActivity : AppCompatActivity() {
         else{
             try {
                 writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "$trophy,$total_distance")
-                println("$trophy,$total_distance")
+                println("success")
             } catch ( e:Exception) {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
             }
@@ -120,6 +105,24 @@ class SecondActivity : AppCompatActivity() {
             //binding.progressBar.setProgress(curClg!!.cur.toInt())
             //binding.progressBar.setProgress(total_distance.toInt())
         }
+        expo += plus_expo
+        println(expo)
+        if(expo >= 100) {
+            var temp = expo % 100
+            var temp_level = expo / 100
+            expo = temp
+            println(expo)
+            level += temp_level
+        }
+        println(expo)
+
+        try {
+            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo")
+            println("expo_success")
+        } catch ( e:Exception) {
+            Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+        println(expo)
 
         //다시
         //+expo -> level올라가는거 구현
