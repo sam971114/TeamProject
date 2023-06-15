@@ -23,6 +23,12 @@ class ChallegeActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     var datas:ArrayList<ChallengeData> = ArrayList()
     var stop = 0
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val nextIntent = Intent(this, MainActivity::class.java)
+        startActivity(nextIntent)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChallegeBinding.inflate(layoutInflater)

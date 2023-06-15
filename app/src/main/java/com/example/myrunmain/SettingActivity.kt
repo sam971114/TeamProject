@@ -18,6 +18,7 @@ import com.example.myrunmain.databinding.ActivitySettingBinding
 import com.google.android.material.navigation.NavigationView
 import java.io.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 @SuppressLint("SetTextI18n")
 class SettingActivity : AppCompatActivity() {
@@ -26,27 +27,19 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     var datas:ArrayList<String> = ArrayList()
     var settingArray = intArrayOf(0,0,0,0)
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val nextIntent = Intent(this, MainActivity::class.java)
+        startActivity(nextIntent)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-        val dir_trophy = File("/data/data/com.example.myrunmain/files/setting.txt")
-        if (!dir_trophy.exists()) {
-            try {
-                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
-                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
-                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
-                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
-                println("success")
-            } catch ( e:Exception) {
-                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-        }
-        else {
-            initSettinglData()
-        }
+
         //runn text들고오기
 
         // txt
@@ -54,6 +47,7 @@ class SettingActivity : AppCompatActivity() {
         // ap : 0 | 4 | 10 | 30
         // cd : 0 | 4 | 6 | 10
         // voice male : 0 | 1
+        initSettingData()
         initButton()
         initLayout()
 
@@ -269,7 +263,7 @@ class SettingActivity : AppCompatActivity() {
         buffer.close()
     }
 
-    private fun initSettinglData() {
+    private fun initSettingData() {
         try {
             var i =0
             val file = File("/data/data/com.example.myrunmain/files/setting.txt")
@@ -287,5 +281,25 @@ class SettingActivity : AppCompatActivity() {
         } catch (e: Exception) {
             println("파일 읽기 오류: ${e.message}")
         }
+    }
+
+
+    fun writeTextFile(directory: String, filename: String, content: String) {
+        /* directory가 존재하는지 검사하고 없으면 생성 */
+        val dir = File(directory)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+
+        val writer = FileWriter(directory + "/" + filename)  // FileWriter 생성
+        println("write dir=${directory + "/" + filename}")
+        val buffer = BufferedWriter(writer)  // buffer에 담아서 속도 향상
+        //writer.write(content+ "\n")
+
+
+
+        buffer.write(content)
+        //buffer.newLine()// buffer로 내용 쓰고
+        buffer.close()  // buffer 닫기
     }
 }

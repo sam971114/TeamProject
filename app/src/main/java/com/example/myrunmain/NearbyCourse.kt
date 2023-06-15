@@ -75,6 +75,12 @@ class NearbyCourseActivity : AppCompatActivity() {
         private const val REQUEST_LOCATION_PERMISSION = 1
     }
 
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val nextIntent = Intent(this, MainActivity::class.java)
+        startActivity(nextIntent)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNearbyCourseBinding.inflate(layoutInflater)

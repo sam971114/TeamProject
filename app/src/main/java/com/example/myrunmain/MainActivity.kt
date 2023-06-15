@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    //여기까지 변수선언
 
 
     private fun checkGPSProvider():Boolean {
@@ -132,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         return ActivityCompat.checkSelfPermission(this,
             android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
+    //여기까지 위치 서비스 권한 세팅
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -199,7 +201,30 @@ class MainActivity : AppCompatActivity() {
         val dir_setting = File("/data/data/com.example.myrunmain/files/setting.txt")
         if (!dir_setting.exists()) {
             try {
-                writeTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0\n0\n0\n0\n")
+                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
+                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
+                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
+                writeRunTextFile("/data/data/com.example.myrunmain/files", "setting.txt", "0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        val dir_challenge = File("/data/data/com.example.myrunmain/files/challenge.txt")
+        if (!dir_challenge.exists()) {
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "challenge.txt", "0.0")
+                println("success")
+            } catch ( e:Exception) {
+                Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        val dir_runlist = File("/data/data/com.example.myrunmain/files/runlist.txt")
+        if (!dir_runlist.exists()) {
+            try {
+                writeTextFile("/data/data/com.example.myrunmain/files", "runlist.txt", "0,0,0,2023.06.21")
                 println("success")
             } catch ( e:Exception) {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
@@ -209,10 +234,10 @@ class MainActivity : AppCompatActivity() {
         initMedalData()
         initLevelData()
         initTrophyData()
-        initLayout()
         level = expo / 100
         curprogress = expo % 100
         setLevel()
+        initLayout()
         try {
             writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "${comp[3]},$challengExpo")
         } catch ( e:Exception) {
@@ -489,6 +514,22 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             println("파일 읽기 오류: ${e.message}")
         }
+    }
+
+    fun writeRunTextFile(directory: String, filename: String, content: String) {
+        /* directory가 존재하는지 검사하고 없으면 생성 */
+        val dir = File(directory)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+
+        val file = File(directory, filename)
+        val writer = FileWriter(file, true) // 이어쓰기 모드로 파일 열기
+
+        val buffer = BufferedWriter(writer)
+        buffer.write(content)
+        buffer.newLine()
+        buffer.close()
     }
 
 }

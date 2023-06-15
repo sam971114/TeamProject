@@ -197,10 +197,10 @@ class MyRunPause : AppCompatActivity() {
         initmap()
         initPause()
         updateTextView()
-        initSettinglData()
+        initSettingData()
         voice_on = settingArray[0]
         countdown = settingArray[2]
-        voice_pause = settingArray[1] + 1
+        voice_pause = settingArray[1]
         voice_male = settingArray[3]
 
 
@@ -262,11 +262,11 @@ class MyRunPause : AppCompatActivity() {
     fun initLocation() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this@MyRunPause)
 
-        locationRequest = com.google.android.gms.location.LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
-            .setMinUpdateIntervalMillis(2000).build()
+        locationRequest = com.google.android.gms.location.LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000)
+            .setMinUpdateIntervalMillis(1000).build()
 
-        locationRequest2 = com.google.android.gms.location.LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY,10000)
-            .setMinUpdateIntervalMillis(2000).build()
+        locationRequest2 = com.google.android.gms.location.LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY,2000)
+            .setMinUpdateIntervalMillis(1000).build()
 
         locationCallback = object: LocationCallback() {
             override fun onLocationResult(location: LocationResult) {
@@ -292,7 +292,7 @@ class MyRunPause : AppCompatActivity() {
     //위치 세팅
 
 
-    private fun initSettinglData() {
+    private fun initSettingData() {
         try {
             var i =0
             val file = File("/data/data/com.example.myrunmain/files/setting.txt")
@@ -397,7 +397,12 @@ class MyRunPause : AppCompatActivity() {
     //distance 세팅
 
     fun setPace(distance: Double, seconds:Long) {
-        pace = distance / seconds.toDouble() * 1000 / 3600
+        if(seconds.toInt() ==0) {
+            pace = 0.0
+        }
+        else {
+            pace = distance / seconds.toDouble() * 1000 / 3600
+        }
         binding.textView11.text = String.format("%.2f", pace) + "  km/h"
     }
     //pace 세팅
@@ -470,7 +475,7 @@ class MyRunPause : AppCompatActivity() {
                         )
                         if(temp_distance == 0.0) {
                             auto_pause(voice_pause)
-                            //println(ticktok)
+                            println(ticktok)
                         }
                     }
                 }
