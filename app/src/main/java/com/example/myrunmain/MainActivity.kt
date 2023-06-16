@@ -50,6 +50,9 @@ class MainActivity : AppCompatActivity() {
     //경험치 증가 값은 예전 회의 때 정해서 노션에 있습니다.
     var expo = 0
     var challengExpo = 0
+    var total_challExpo = 0
+    var total_total_Expo = 0
+    var total_distance = 0.0
 
 
     val permissions = arrayOf(
@@ -181,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         val dir_level = File("/data/data/com.example.myrunmain/files/level.txt")
         if (!dir_level.exists()) {
             try {
-                writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "0,0")
+                writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "0,0,0")
                 println("success")
             } catch ( e:Exception) {
                 Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
@@ -233,18 +236,21 @@ class MainActivity : AppCompatActivity() {
         initmap()
         initMedalData()
         initLevelData()
-        curprogress = expo
+        total_total_Expo = total_challExpo + expo
+        level = (total_total_Expo / 100)
+        curprogress = (total_total_Expo % 100)
+        println("curprogress : $curprogress")
         initTrophyData()
         setLevel()
         initLayout()
         try {
-            writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "${comp[3]},$challengExpo")
+            writeTextFile("/data/data/com.example.myrunmain/files", "trophy.txt", "${comp[3]},$total_distance")
         } catch ( e:Exception) {
             Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
         }
 
         try {
-            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo")
+            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo,$total_challExpo")
         } catch ( e:Exception) {
             Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
         }
@@ -479,6 +485,7 @@ class MainActivity : AppCompatActivity() {
                 val runarr = line!!.split(",")
                 level = runarr[0].toInt()
                 expo = runarr[1].toInt()
+                total_challExpo = runarr[2].toInt()
             }
 
             initLayout()
@@ -500,6 +507,7 @@ class MainActivity : AppCompatActivity() {
                 println(line)
                 val runarr = line!!.split(",")
                comp[3] = runarr[0].toInt()
+                total_distance = runarr[1].toDouble()
             }
             initLayout()
 

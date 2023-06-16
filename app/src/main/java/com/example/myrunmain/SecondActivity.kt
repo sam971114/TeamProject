@@ -49,6 +49,7 @@ class SecondActivity : AppCompatActivity() {
     var expo = 0
     var plus_expo = 0
     var distance = 0.0
+    var total_challExpo = 0
 
     override fun onBackPressed() {
         //super.onBackPressed()
@@ -66,6 +67,7 @@ class SecondActivity : AppCompatActivity() {
 
         val intent_get = getIntent()
         distance = intent_get.getDoubleExtra("second_distance", 0.0)
+        println(distance)
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
@@ -73,13 +75,17 @@ class SecondActivity : AppCompatActivity() {
 
         initTrophyData()
         initLevelData()
+        println(total_distance)
         total_distance += distance
+        println(total_distance)
         initData()
 
 
-        if(total_distance / 1000 >= newChall) {
+        if(total_distance / 1000 >= newChall && newChall != 0.0) {
             plus_expo = newChall.toInt()
             println(plus_expo)
+            total_challExpo += plus_expo
+            println(total_challExpo)
             trophy++
             binding.progressBar.setProgress(0)
             try {
@@ -105,24 +111,24 @@ class SecondActivity : AppCompatActivity() {
             //binding.progressBar.setProgress(curClg!!.cur.toInt())
             //binding.progressBar.setProgress(total_distance.toInt())
         }
-        expo += plus_expo
-        println(expo)
-        if(expo >= 100) {
-            var temp = expo % 100
-            var temp_level = expo / 100
-            expo = temp
-            println(expo)
-            level += temp_level
-        }
-        println(expo)
-
+//        expo += plus_expo
+//        println(expo)
+//        if(expo >= 100) {
+//            var temp = expo % 100
+//            var temp_level = expo / 100
+//            expo = temp
+//            println(expo)
+//            level += temp_level
+//        }
+//        println(expo)
+        println("this is $total_challExpo")
         try {
-            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo")
+            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo,$total_challExpo")
             println("expo_success")
         } catch ( e:Exception) {
             Toast.makeText(this, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
         }
-        println(expo)
+//        println(expo)
 
         //다시
         //+expo -> level올라가는거 구현
@@ -195,7 +201,7 @@ class SecondActivity : AppCompatActivity() {
             curClg = newClg
         }
         if(curClg!=null){ // 챌린지를 진행 중이라면,
-            curClg!!.cur = curClg!!.cur + distance
+            curClg!!.cur = curClg!!.cur + total_distance
             binding.curChallenge.text = "현재 챌린지 : 이번 달 " + curClg!!.goal.toString() +" km"
             //binding.nowCom.text = curClg!!.cur.toString()+" km 완료"
             //binding.nowCom.text = total_distance.toString() + " km 완료"
@@ -277,7 +283,7 @@ class SecondActivity : AppCompatActivity() {
 
             reader.close()
         } catch (e: Exception) {
-            println("파일 읽기 오류: ${e.message}")
+            println("파일 데이터 읽기 오류: ${e.message}")
         }
     }
 
@@ -317,7 +323,7 @@ class SecondActivity : AppCompatActivity() {
 
             reader.close()
         } catch (e: Exception) {
-            println("파일 읽기 오류: ${e.message}")
+            println("파일 트로피 읽기 오류: ${e.message}")
         }
     }
 
@@ -333,11 +339,12 @@ class SecondActivity : AppCompatActivity() {
                 val runarr = line!!.split(",")
                 level = runarr[0].toInt()
                 expo = runarr[1].toInt()
+                total_challExpo = runarr[2].toInt()
             }
 
             reader.close()
         } catch (e: Exception) {
-            println("파일 읽기 오류: ${e.message}")
+            println("파일 레벨 읽기 오류: ${e.message}")
         }
     }
 

@@ -32,6 +32,8 @@ class AllFragment : Fragment() {
     var level = 0
     var challengeExpo = 0
     var trophy = 0
+    var total_challExpo = 0
+    var temp_expo = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +53,7 @@ class AllFragment : Fragment() {
         }
 
         try {
-            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo")
+            writeTextFile("/data/data/com.example.myrunmain/files", "level.txt", "$level,$expo,$total_challExpo")
         } catch ( e:Exception) {
             Toast.makeText(activity, "파일 오류: ${e.message}", Toast.LENGTH_LONG).show()
         }
@@ -118,7 +120,8 @@ class AllFragment : Fragment() {
                 println(line)
                 val runarr = line!!.split(",")
                 level = runarr[0].toInt()
-                expo = runarr[1].toInt()
+                temp_expo = runarr[1].toInt()
+                total_challExpo = runarr[2].toInt()
             }
 
             reader.close()

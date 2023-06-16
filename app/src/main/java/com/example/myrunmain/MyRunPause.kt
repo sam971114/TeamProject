@@ -200,7 +200,7 @@ class MyRunPause : AppCompatActivity() {
         initSettingData()
         voice_on = settingArray[0]
         countdown = settingArray[2]
-        voice_pause = settingArray[1]
+        voice_pause = settingArray[1] //당일에 delay 생기는 만큼 여기 plus 해주시면 됩니당.
         voice_male = settingArray[3]
 
 
@@ -489,7 +489,7 @@ class MyRunPause : AppCompatActivity() {
                     intent_sec.putExtra("elapsedtime",elsp_time)
                     intent_sec.putExtra("distance", distance)
                     intent_sec.putExtra("pace", pace)
-                    
+
                     startActivity(intent_sec)
                 }
             }
