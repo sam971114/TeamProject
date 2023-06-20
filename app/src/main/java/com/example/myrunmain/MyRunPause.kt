@@ -200,7 +200,7 @@ class MyRunPause : AppCompatActivity() {
         initSettingData()
         voice_on = settingArray[0]
         countdown = settingArray[2]
-        voice_pause = settingArray[1] //당일에 delay 생기는 만큼 여기 plus 해주시면 됩니당.
+        voice_pause = settingArray[1] - 3 //당일에 delay 생기는 만큼 여기 plus 해주시면 됩니당.
         voice_male = settingArray[3]
 
 
@@ -476,6 +476,8 @@ class MyRunPause : AppCompatActivity() {
                         if(temp_distance == 0.0 && voice_pause !=0) {
                             auto_pause(voice_pause)
                             println(ticktok)
+                        } else if(temp_distance != 0.0) {
+                            ticktok = 0
                         }
                     }
                 }
